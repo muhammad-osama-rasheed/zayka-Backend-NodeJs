@@ -10,7 +10,7 @@ const {
 
 router.post("/", createOrder);
 
-router.get("/", getSingleOrder);
+router.get("/:id", getSingleOrder);
 
 router.get("/", getAllOrders);
 
