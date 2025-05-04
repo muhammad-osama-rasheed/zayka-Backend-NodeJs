@@ -104,7 +104,7 @@ const forgotPassword = async (req, res) => {
       html: `  <div>
       <p>To reset your password, click the button below:</p>
       <a
-       href="http://localhost:5173/reset-password/${resetPasswordToken}"
+       href="https://zaykaadmin.vercel.app/reset-password/${resetPasswordToken}"
         style="
           width: max-content;
           padding: 5px 10px;

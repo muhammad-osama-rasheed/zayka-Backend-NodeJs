@@ -24,6 +24,12 @@ app.use("/auth", authRoutes);
 const productRoutes = require("./routes/productRoutes");
 app.use("/product", productRoutes);
 
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/reviews", reviewRoutes);
+
+const orderRoutes = require("./routes/orderRoutes");
+app.use("/order", orderRoutes);
+
 app.get("/", (req, res) => {
   res.send("Zayka!");
 });
