@@ -37,6 +37,11 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
 
+  topWeek: {
+    type: Boolean,
+    default: false,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now(),
