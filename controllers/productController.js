@@ -64,40 +64,27 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, upload, getAllProducts };
+const searchProduct = async (req, res) => {
+  try {
+    let search = req.body.search;
 
-// const createProduct = async (req, res) => {
-//   try {
-//     const data = req.body;
+    let productData = await Product.find({
+      name: { $regex: ".*" + search + ".*", $options: "i" },
+    });
 
-//     if (!req.file) {
-//       return res.status(400).json({ error: "No file uploaded" });
-//     }
+    if (productData.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: "Product found successfully",
+        data: productData,
+      });
+    } else {
+      
+      res.status(404).json({ success: false, message: "Product not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-//     const uploadImageToCloudinary = cloudinary.uploader.upload(req.file.path, {
-//       folder: "uploads",
-//       use_filename: true,
-//       unique_filename: true,
-//     });
-
-//     if (uploadImageToCloudinary) {
-//       data.image = uploadImageToCloudinary.secure_url;
-//     }
-
-//     const newProduct = new Product(data);
-//     const savedProduct = await newProduct.save();
-
-//     res.status(201).json({
-//       success: true,
-//       message: "Product created successfully.",
-//       data: savedProduct,
-//     });
-//   } catch (error) {
-//     console.log("Error Saving: ", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Internal Server Error.",
-//       error: error,
-//     });
-//   }
-// };
+module.exports = { createProduct, upload, getAllProducts, searchProduct };

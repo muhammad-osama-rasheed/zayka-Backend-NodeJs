@@ -41,3 +41,39 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = { getUsers, deleteUser };
+
+// const createProduct = async (req, res) => {
+//   try {
+//     const data = req.body;
+
+//     if (!req.file) {
+//       return res.status(400).json({ error: "No file uploaded" });
+//     }
+
+//     const uploadImageToCloudinary = cloudinary.uploader.upload(req.file.path, {
+//       folder: "uploads",
+//       use_filename: true,
+//       unique_filename: true,
+//     });
+
+//     if (uploadImageToCloudinary) {
+//       data.image = uploadImageToCloudinary.secure_url;
+//     }
+
+//     const newProduct = new Product(data);
+//     const savedProduct = await newProduct.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Product created successfully.",
+//       data: savedProduct,
+//     });
+//   } catch (error) {
+//     console.log("Error Saving: ", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error.",
+//       error: error,
+//     });
+//   }
+// };
