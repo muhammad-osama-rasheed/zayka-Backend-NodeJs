@@ -10,7 +10,8 @@ const {
   forgotPassword,
   resetPassword,
   sendOtp,
-  verifyOtpAndReset,
+  changePasswordAfterVerify,
+  verifyOtp,
 } = require("../controllers/authController");
 
 router.post("/signup", signUpValidator, signUp);
@@ -23,6 +24,8 @@ router.put("/reset-password/:token", resetPassword);
 
 router.post("/send-otp", sendOtp);
 
-router.post("/verify-otp-reset", verifyOtpAndReset);
+router.post("/verify-otp", verifyOtp);
+
+router.post("/change-password", changePasswordAfterVerify);
 
 module.exports = router;

@@ -201,9 +201,9 @@ const sendOtp = async (req, res) => {
   }
 };
 
-const verifyOtpAndReset = async (req, res) => {
+const verifyOtp = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    const { email, otp } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -218,6 +218,30 @@ const verifyOtpAndReset = async (req, res) => {
         .json({ success: false, message: "Invalid or expired OTP." });
     }
 
+    // user.password = await bcrypt.hash(newPassword, 10);
+    // user.otp = undefined;
+    // user.otpExpiry = undefined;
+    // await user.save();
+
+    res.status(200).json({ success: true, message: "OTP Verfied!" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error." });
+    console.log(error);
+  }
+};
+
+const changePasswordAfterVerify = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Email not found." });
+    }
+
     user.password = await bcrypt.hash(newPassword, 10);
     user.otp = undefined;
     user.otpExpiry = undefined;
@@ -225,7 +249,7 @@ const verifyOtpAndReset = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "Password reset successfully." });
+      .json({ success: true, message: "Password reset successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error." });
     console.log(error);
@@ -238,5 +262,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   sendOtp,
-  verifyOtpAndReset,
+  verifyOtp,
+  changePasswordAfterVerify,
 };
