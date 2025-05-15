@@ -160,4 +160,83 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login, forgotPassword, resetPassword };
+const sendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Email not registered." });
+    }
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
+    user.otp = otp;
+    user.otpExpiry = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Your OTP Code",
+      html: `<p>Your OTP code is <b>${otp}</b>. It is valid for 10 minutes.</p>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ success: true, message: "OTP sent to your email." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error." });
+    console.log(error);
+  }
+};
+
+const verifyOtpAndReset = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Email not found." });
+    }
+
+    if (user.otp !== otp || user.otpExpiry < Date.now()) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired OTP." });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Password reset successfully." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error." });
+    console.log(error);
+  }
+};
+
+module.exports = {
+  signUp,
+  login,
+  forgotPassword,
+  resetPassword,
+  sendOtp,
+  verifyOtpAndReset,
+};
