@@ -47,7 +47,7 @@ const getFavoriteProducts = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found." });
 
-    res.status(200).json({ success: true, favorites: user.favorites });
+    res.status(200).json({ success: true, data: user.favorites });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Intrnal Server Error" });
