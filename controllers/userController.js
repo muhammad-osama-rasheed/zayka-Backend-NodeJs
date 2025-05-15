@@ -17,6 +17,29 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getSingleUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
@@ -40,40 +63,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, deleteUser };
-
-// const createProduct = async (req, res) => {
-//   try {
-//     const data = req.body;
-
-//     if (!req.file) {
-//       return res.status(400).json({ error: "No file uploaded" });
-//     }
-
-//     const uploadImageToCloudinary = cloudinary.uploader.upload(req.file.path, {
-//       folder: "uploads",
-//       use_filename: true,
-//       unique_filename: true,
-//     });
-
-//     if (uploadImageToCloudinary) {
-//       data.image = uploadImageToCloudinary.secure_url;
-//     }
-
-//     const newProduct = new Product(data);
-//     const savedProduct = await newProduct.save();
-
-//     res.status(201).json({
-//       success: true,
-//       message: "Product created successfully.",
-//       data: savedProduct,
-//     });
-//   } catch (error) {
-//     console.log("Error Saving: ", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Internal Server Error.",
-//       error: error,
-//     });
-//   }
-// };
+module.exports = { getUsers, deleteUser, getSingleUser };
