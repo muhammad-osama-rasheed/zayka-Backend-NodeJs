@@ -33,6 +33,9 @@ app.use("/reviews", reviewRoutes);
 const orderRoutes = require("./routes/orderRoutes");
 app.use("/order", orderRoutes);
 
+const favoriteRoutes = require("./routes/favoriteRoutes");
+app.use("/favorites", favoriteRoutes);
+
 app.get("/", (req, res) => {
   res.send("Zayka!");
 });

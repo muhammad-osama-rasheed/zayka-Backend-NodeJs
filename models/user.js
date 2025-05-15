@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema({
   otpExpiry: {
     type: Number,
   },
+
+  favorites: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema);
