@@ -203,7 +203,7 @@ const sendOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { otp, email } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -217,11 +217,6 @@ const verifyOtp = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Invalid or expired OTP." });
     }
-
-    // user.password = await bcrypt.hash(newPassword, 10);
-    // user.otp = undefined;
-    // user.otpExpiry = undefined;
-    // await user.save();
 
     res.status(200).json({ success: true, message: "OTP Verfied!" });
   } catch (error) {
