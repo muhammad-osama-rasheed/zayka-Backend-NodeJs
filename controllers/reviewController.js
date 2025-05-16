@@ -24,7 +24,7 @@ const createReview = async (req, res) => {
 
 const getAllReviews = async (req, res) => {
   try {
-    const data = await Review.find().populate("user");
+    const data = await Review.find().populate("user", "_id name");
 
     if (data.length === 0) {
       return res
