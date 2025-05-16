@@ -49,8 +49,8 @@ const getAllReviews = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   try {
-    const id = req.params.id;
-    const response = await User.findByIdAndDelete(id);
+    const id = req.params.reviewId;
+    const response = await Review.findByIdAndDelete(id);
 
     if (!response) {
       return res
