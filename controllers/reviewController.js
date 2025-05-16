@@ -9,7 +9,7 @@ const createReview = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Thank you for sharing your feedback!",
+      message: "Thanks, for sharing your feedback!",
       data: savedReview,
     });
   } catch (error) {
@@ -24,13 +24,18 @@ const createReview = async (req, res) => {
 
 const getAllReviews = async (req, res) => {
   try {
-    const findReviews = await Review.find()
-      .populate("user", "_id name")
-      .populate("product");
+    const data = await Review.find().populate("user");
+
+    if (data.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Data not found." });
+    }
+
     res.json({
       success: true,
       message: "All reviews fetched successfully",
-      data: findReviews,
+      data: data,
     });
   } catch (error) {
     console.log("Error Fetching: ", error);
