@@ -9,7 +9,7 @@ const createOrder = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Thanks! Your order was placed successfully.",
+      message: "Your order placed successfully.",
       data: saveOrder,
     });
   } catch (error) {

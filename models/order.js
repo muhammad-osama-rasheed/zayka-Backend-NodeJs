@@ -17,8 +17,6 @@ const orderSchema = new mongoose.Schema(
         },
         quantity: {
           type: Number,
-          required: true,
-          min: 1,
           default: 1,
         },
       },
@@ -46,7 +44,7 @@ const orderSchema = new mongoose.Schema(
       default: "Sindh",
     },
 
-    postalCode: {
+    phone: {
       type: String,
       required: true,
     },
@@ -54,6 +52,16 @@ const orderSchema = new mongoose.Schema(
     country: {
       type: String,
       default: "Pakistan",
+    },
+
+    altPhone: {
+      type: String,
+      default: null,
+    },
+
+    extraInfo: {
+      type: String,
+      default: null,
     },
 
     status: {
