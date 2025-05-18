@@ -4,8 +4,9 @@ const {
   toggleFavorite,
   getFavoriteProducts,
 } = require("../controllers/favoriteController");
+const ensureAuthenticated = require("../middlewares/authenticateUser");
 
-router.post("/toggle", toggleFavorite);
+router.post("/toggle", ensureAuthenticated, toggleFavorite);
 router.get("/:id", getFavoriteProducts);
 
 module.exports = router;

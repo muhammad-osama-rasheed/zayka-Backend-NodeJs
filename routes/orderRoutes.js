@@ -7,8 +7,9 @@ const {
   deleteOrder,
   getSingleOrder,
 } = require("../controllers/orderController");
+const ensureAuthenticated = require("../middlewares/authenticateUser");
 
-router.post("/", createOrder);
+router.post("/", ensureAuthenticated, createOrder);
 
 router.get("/:id", getSingleOrder);
 

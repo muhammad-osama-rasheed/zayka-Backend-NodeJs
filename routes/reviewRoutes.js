@@ -5,11 +5,12 @@ const {
   getAllReviews,
   deleteReview,
 } = require("../controllers/reviewController");
+const ensureAuthenticated = require("../middlewares/authenticateUser");
 
-router.post("/", createReview);
+router.post("/", ensureAuthenticated, createReview);
 
 router.get("/", getAllReviews);
 
-router.delete("/:reviewId", deleteReview);
+router.delete("/:reviewId", ensureAuthenticated, deleteReview);
 
 module.exports = router;
