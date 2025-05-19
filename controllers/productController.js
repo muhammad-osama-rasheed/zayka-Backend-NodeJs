@@ -79,7 +79,6 @@ const searchProduct = async (req, res) => {
         data: productData,
       });
     } else {
-      
       res.status(404).json({ success: false, message: "Product not found." });
     }
   } catch (error) {
@@ -87,4 +86,104 @@ const searchProduct = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, upload, getAllProducts, searchProduct };
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let updatedData = req.body;
+
+    if (req.file) {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "uploads",
+          use_filename: true,
+          unique_filename: true,
+        },
+        async (error, result) => {
+          if (error) {
+            console.log("Image upload failed: ", error);
+            return res
+              .status(500)
+              .json({ success: false, message: "Image upload failed." });
+          }
+
+          updatedData.image = result.secure_url;
+
+          const updatedProduct = await Product.findByIdAndUpdate(
+            id,
+            updatedData,
+            {
+              new: true,
+            }
+          );
+
+          if (!updatedProduct) {
+            return res.status(404).json({
+              success: false,
+              message: "Product not found.",
+            });
+          }
+
+          res.status(200).json({
+            success: true,
+            message: "Product updated successfully.",
+            data: updatedProduct,
+          });
+        }
+      );
+
+      uploadStream.end(req.file.buffer);
+    } else {
+      const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, {
+        new: true,
+      });
+
+      if (!updatedProduct) {
+        return res.status(404).json({
+          success: false,
+          message: "Product not found.",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully.",
+        data: updatedProduct,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+module.exports = {
+  createProduct,
+  upload,
+  getAllProducts,
+  searchProduct,
+  deleteProduct,
+  updateProduct,
+};
